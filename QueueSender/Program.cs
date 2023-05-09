@@ -29,21 +29,23 @@ sender = client.CreateSender(config.get("SERVICE_BUS_QUEUE_NAME"));
 // create a batch 
 using ServiceBusMessageBatch messageBatch = await sender.CreateMessageBatchAsync();
 
-for (int i = 1; i <= numOfMessages; i++)
-{
-    // try adding a message to the batch
-    if (!messageBatch.TryAddMessage(new ServiceBusMessage($"Message {i}")))
-    {
-        // if it is too large for the batch
-        throw new Exception($"The message {i} is too large to fit in the batch.");
-    }
-}
-
 try
 {
     // Use the producer client to send the batch of messages to the Service Bus queue
-    await sender.SendMessagesAsync(messageBatch);
-    Console.WriteLine($"A batch of {numOfMessages} messages has been published to the queue.");
+    bool end = false;
+    while (!end)
+    {
+        string? input = Console.ReadLine();
+        if (input != null && input.ToLower() == "exit")
+        {
+            end = true;
+        } 
+        else
+        {
+            await sender.SendMessageAsync(new ServiceBusMessage(input));
+            Console.WriteLine($"Content \"{input}\" has been sent to service bus");
+        }
+    }
 }
 finally
 {
@@ -52,6 +54,3 @@ finally
     await sender.DisposeAsync();
     await client.DisposeAsync();
 }
-
-Console.WriteLine("Press any key to end the application");
-Console.ReadKey();

@@ -8,9 +8,6 @@ ServiceBusClient client;
 // the sender used to publish messages to the queue
 ServiceBusSender sender;
 
-// number of messages to be sent to the queue
-const int numOfMessages = 3;
-
 // The Service Bus client types are safe to cache and use as a singleton for the lifetime
 // of the application, which is best practice when messages are being published or read
 // regularly.
@@ -31,6 +28,7 @@ using ServiceBusMessageBatch messageBatch = await sender.CreateMessageBatchAsync
 
 try
 {
+    Console.WriteLine($"Message sending to {config.get("SERVICE_BUS_QUEUE_NAME")}");
     // Use the producer client to send the batch of messages to the Service Bus queue
     bool end = false;
     while (!end)

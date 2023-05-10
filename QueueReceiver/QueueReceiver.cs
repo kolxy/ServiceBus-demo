@@ -37,7 +37,7 @@ try
     // start processing 
     await processor.StartProcessingAsync();
 
-    Console.WriteLine("Wait for a minute and then press any key to end the processing");
+    Console.WriteLine($"Listening to queue {config.get("SERVICE_BUS_QUEUE_NAME")}. Press any key to exit");
     Console.ReadKey();
 
     // stop processing 
